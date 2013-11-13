@@ -17,13 +17,12 @@ public abstract class AbstractGenerator {
         this.lowerLimit = lowerLimit;
         this.upperLimit = upperLimit;
         this.n = n;
-        rand = new Random();
+        rand = new Random(System.currentTimeMillis());
         mean = (upperLimit + lowerLimit) / 2;
         
-        generateValues();
     }
     
-    private void generateValues() {
+    protected void generateValues() {
         int range = upperLimit - lowerLimit;
         variance = rand.nextInt(range) + rand.nextGaussian();
         

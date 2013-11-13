@@ -18,6 +18,8 @@ public class NormalGenerator extends AbstractGenerator {
     
     public NormalGenerator(int lowerLimit, int upperLimit, int n) {
         super(lowerLimit, upperLimit, n);
+        mean = (upperLimit + lowerLimit) / 2;
+        
     }
     
     int getNext() {
