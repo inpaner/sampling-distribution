@@ -37,10 +37,11 @@ public abstract class AbstractGenerator {
             count++;
             values.put(nextValue, count);
         }
-
     }
     
     public double getActualMean() {
+        if (values == null)
+            generateValues();
         double result = 0;
         for (Integer number : values.keySet()) {
             int count = values.get(number);
@@ -50,6 +51,8 @@ public abstract class AbstractGenerator {
     }
     
     public double getActualVariance() {
+        if (values == null)
+            generateValues();
         double meanOfSquares = 0;
         for (Integer number : values.keySet()) {
             int count = values.get(number);
@@ -61,6 +64,8 @@ public abstract class AbstractGenerator {
     }
     
     public final Map<Integer, Integer>  getValues() {
+        if (values == null)
+            generateValues();
         return values;
     }
     
