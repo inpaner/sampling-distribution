@@ -12,6 +12,8 @@ public class NormalGenerator extends AbstractGenerator {
             System.out.println(number + ": " + count);
         }
         System.out.println(n.variance);
+        System.out.println(n.getActualMean());
+        System.out.println(n.getActualVariance());
     }
     
     public NormalGenerator(int lowerLimit, int upperLimit, int n) {
@@ -25,6 +27,5 @@ public class NormalGenerator extends AbstractGenerator {
         
         return result;
     }
-    
 
 }

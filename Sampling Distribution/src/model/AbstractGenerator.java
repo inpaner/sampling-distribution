@@ -9,20 +9,9 @@ public abstract class AbstractGenerator {
     protected int upperLimit;
     protected int n;
     protected final Random rand;
-    protected int mean;
+    protected double mean;
     protected double variance;
     protected Map<Integer, Integer> values; 
-    
-    
-    public static void main(String[] args) {
-        NormalGenerator n = new NormalGenerator(0, 100, 1000);
-        Map<Integer, Integer> values = n.getValues();
-        for (Integer number : values.keySet()) {
-            int count = values.get(number);
-            System.out.println(number + ": " + count);
-        }
-        
-    }
     
     protected AbstractGenerator(int lowerLimit, int upperLimit, int n) {
         this.lowerLimit = lowerLimit;
@@ -50,6 +39,26 @@ public abstract class AbstractGenerator {
             values.put(nextValue, count);
         }
 
+    }
+    
+    public double getActualMean() {
+        double result = 0;
+        for (Integer number : values.keySet()) {
+            int count = values.get(number);
+            result = result + number * count;
+        }
+        return result / n;
+    }
+    
+    public double getActualVariance() {
+        double meanOfSquares = 0;
+        for (Integer number : values.keySet()) {
+            int count = values.get(number);
+            meanOfSquares = meanOfSquares + Math.pow(number, 2) * count;
+        }
+        meanOfSquares /= n;
+        double squareOfMeans = Math.pow(getActualMean(), 2);
+        return meanOfSquares - squareOfMeans;
     }
     
     public final Map<Integer, Integer>  getValues() {
