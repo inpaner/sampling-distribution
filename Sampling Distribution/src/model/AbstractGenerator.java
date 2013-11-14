@@ -33,7 +33,6 @@ public abstract class AbstractGenerator {
         this.n = n;
         rand = new Random();
         mean = (upperLimit + lowerLimit) / 2;
-        
     }
     
     protected void generateValues() {
@@ -56,12 +55,15 @@ public abstract class AbstractGenerator {
     public double getActualMean() {
         if (values == null)
             generateValues();
+        
+        int realN = 0;
         double result = 0;
         for (Integer number : values.keySet()) {
             int count = values.get(number);
+            realN += count;
             result = result + number * count;
         }
-        return result / n;
+        return result / realN;
     }
     
     public double getActualVariance() {
