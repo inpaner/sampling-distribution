@@ -24,6 +24,8 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -65,7 +67,16 @@ public class InputPanel extends JPanel {
         generatorGroup.add(randomRadio);
         
         Box radioBox = new Box(BoxLayout.X_AXIS);
-        radioBox.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        TitledBorder border = BorderFactory.createTitledBorder("Distribution");
+        border.setTitleJustification(TitledBorder.LEFT);
+        border.setTitlePosition(TitledBorder.TOP);
+        radioBox.setBorder(border);
+        radioBox.add(uniformRadio);
+        radioBox.add(normalRadio);
+        radioBox.add(skewedRadio);
+        radioBox.add(bimodalRadio);
+        radioBox.add(randomRadio);
+
         
         // x
         JLabel xLabel = new JLabel("x: ");
@@ -102,6 +113,7 @@ public class InputPanel extends JPanel {
          * Add components
          */
         setLayout(new MigLayout("", "[][30][30, center][30]"));
+        add(radioBox, "span, split, wrap");
         
         add(xLabel);
         add(lowerSpinner);
@@ -111,7 +123,7 @@ public class InputPanel extends JPanel {
         add(nLabel);
         add(nSpinner, "wrap");
         
-        add(updateButton, "span, split, wrap");
+        //add(updateButton, "span, split, wrap");
         
     }
     
