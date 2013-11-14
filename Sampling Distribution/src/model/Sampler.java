@@ -8,7 +8,7 @@ import org.paukov.combinatorics.Factory;
 import org.paukov.combinatorics.Generator;
 import org.paukov.combinatorics.ICombinatoricsVector;
 
-public class Sampling {
+public class Sampler {
     
     private int n;
     private ICombinatoricsVector<Integer> values;
@@ -18,21 +18,21 @@ public class Sampling {
     private Double varianceOfMeans;
     
     public static void main(String[] args) {
-        AbstractGenerator n = new BimodalGenerator(0, 10, 20);
+        AbstractGenerator n = new SkewGenerator(0, 30, 50);
         Map<Integer, Integer> values = n.getValues();
-        boolean log = false;
+        boolean log = true;
         if (log) {
             for (Integer number : values.keySet()) {
                 int count = values.get(number);
                 System.out.println(number + ": " + count);
             }
         }
-        Sampling sampling = new Sampling();
-        sampling.n = 3;
-        sampling.setValues(values);
-        sampling.getSamples();
+        Sampler sampler = new Sampler();
+        sampler.n = 3;
+        sampler.setValues(values);
+        sampler.getSamples();
         
-        Map<Double, Integer> meanOfMeans = sampling.getMeansCount();
+        Map<Double, Integer> meanOfMeans = sampler.getMeansCount();
         if (log) {
             for (Double mean : meanOfMeans.keySet()) {
                 int count = meanOfMeans.get(mean);
@@ -40,9 +40,9 @@ public class Sampling {
             }
         }
         System.out.println("Orig mean: " + n.getActualMean());
-        System.out.println("Mean of means: " + sampling.getMeanOfMeans());
+        System.out.println("Mean of means: " + sampler.getMeanOfMeans());
         System.out.println("Orig variance: " + n.getActualVariance());
-        System.out.println("Variance of means: " + sampling.getVarianceOfMeans());
+        System.out.println("Variance of means: " + sampler.getVarianceOfMeans());
     }
     
     public void setValues(Map<Integer, Integer> mappedValues) {
