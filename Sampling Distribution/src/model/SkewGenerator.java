@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public class SkewGenerator extends AbstractGenerator {
     
-    protected SkewGenerator(int lowerLimit, int upperLimit, int n) {
+    public SkewGenerator(int lowerLimit, int upperLimit, int n) {
         super(lowerLimit, upperLimit, n);
         int range = upperLimit - lowerLimit;
         mean = rand.nextInt(range) + lowerLimit;

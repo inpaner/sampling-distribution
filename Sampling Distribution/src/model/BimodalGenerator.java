@@ -9,7 +9,7 @@ import java.util.TreeMap;
 public class BimodalGenerator extends AbstractGenerator {
     protected double mean2;
     protected double variance2;
-    protected BimodalGenerator(int lowerLimit, int upperLimit, int n) {
+    public BimodalGenerator(int lowerLimit, int upperLimit, int n) {
         super(lowerLimit, upperLimit, n);
         
         int range = upperLimit - lowerLimit;

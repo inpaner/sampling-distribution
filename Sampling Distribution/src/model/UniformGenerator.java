@@ -2,7 +2,7 @@ package model;
 
 public class UniformGenerator extends AbstractGenerator {
 
-    protected UniformGenerator(int lowerLimit, int upperLimit, int n) {
+    public UniformGenerator(int lowerLimit, int upperLimit, int n) {
         super(lowerLimit, upperLimit, n);
 
     }

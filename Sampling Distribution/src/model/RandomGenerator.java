@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 public class RandomGenerator extends AbstractGenerator {
     private static final int SENSITIVITY = 1000;
-    protected RandomGenerator(int lowerLimit, int upperLimit, int n) {
+    public RandomGenerator(int lowerLimit, int upperLimit, int n) {
         super(lowerLimit, upperLimit, n);
     }
 
@@ -19,21 +19,29 @@ public class RandomGenerator extends AbstractGenerator {
     @Override
     protected void generateValues() {
         // randomize distribution
-        int totalCount = 0;
+        int seedCount = 0;
         List<Integer> distribution = new ArrayList<>();
         
         for (int i = lowerLimit; i <= upperLimit; i++) {
-            int value = rand.nextInt(SENSITIVITY);
-            totalCount += value;
-            distribution.add(value);
+            int seed = rand.nextInt(SENSITIVITY);
+            seedCount += seed;
+            distribution.add(seed);
         }
         
+        /*
+         * Place count of numbers into map. Percentage of the 
+         * random seed against total seeds is used to calculate
+         * count. 
+         */
         values = new TreeMap<>();
-        int index = 0;
+        int mapIndex = 0;
+        int numbersCount = 0;
         for (int i = lowerLimit; i <= upperLimit; i++) {
-            int count = n * distribution.get(index) / totalCount;
+            int count = n * distribution.get(mapIndex) / seedCount;
             values.put(i, count);
-            index++;
+            numbersCount += count;
+            mapIndex++;
         }
+
     }
 }
