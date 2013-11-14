@@ -1,20 +1,30 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.spec.PSource.PSpecified;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.apache.commons.math3.genetics.NPointCrossover;
@@ -24,198 +34,162 @@ import net.miginfocom.swing.MigLayout;
 
 public class InputPanel extends JPanel {
     
-    private JLabel xLabel;
-    private JSpinner xLowerSpinner;
-    private JLabel toLabel;
-    private JSpinner xUpperSpinner;
-    private JCheckBox singleCheck;
-    private JLabel nLabel;
+    private JSpinner lowerSpinner;
+    private JSpinner upperSpinner;
     private JSpinner nSpinner;
-    private JLabel pLabel;
-    private JTextField pField;
-    private JSlider pSlider;
     private JButton updateButton;
-    private JLabel bLabel;
-    private JLabel bValueLabel;
+    
+    private int lowerLimit;
+    private int upperLimit;
+    private int populationN;
+    private int sampleN;
+    
+    private List<Listener> listeners = new ArrayList<>();
     
     public InputPanel() {
-        setLayout(new MigLayout("", "[][30][30, center][30]"));
-        initComponents();
-        addComponents();
-    }
-    
-    private void initComponents() {                                
+        /*
+         * Initialize Components
+         */
+        
+        // Generators
+        JRadioButton uniformRadio = new JRadioButton("Uniform");
+        JRadioButton normalRadio = new JRadioButton("Normal");
+        JRadioButton skewedRadio = new JRadioButton("Skewed");
+        JRadioButton bimodalRadio = new JRadioButton("Bimodal");
+        JRadioButton randomRadio = new JRadioButton("Random");
+        ButtonGroup generatorGroup = new ButtonGroup();
+        generatorGroup.add(uniformRadio);
+        generatorGroup.add(normalRadio);
+        generatorGroup.add(skewedRadio);
+        generatorGroup.add(bimodalRadio);
+        generatorGroup.add(randomRadio);
+        
+        Box radioBox = new Box(BoxLayout.X_AXIS);
+        radioBox.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        
         // x
-        xLabel = new JLabel("x: ");
-        xLowerSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Binomial.MAX_X, 1));
-        JComponent field = ((JSpinner.DefaultEditor) xLowerSpinner.getEditor());
+        JLabel xLabel = new JLabel("x: ");
+        lowerSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Binomial.MAX_X, 1));
+        JComponent field = ((JSpinner.DefaultEditor) lowerSpinner.getEditor());
         Dimension prefSize = field.getPreferredSize();
         prefSize = new Dimension(30, prefSize.height);
         field.setPreferredSize(prefSize);
         
-        toLabel = new JLabel("to: ");
+        JLabel toLabel = new JLabel("to: ");
         
-        xUpperSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Binomial.MAX_X, 1));
-        field = ((JSpinner.DefaultEditor) xUpperSpinner.getEditor());
+        upperSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Binomial.MAX_X, 1));
+        field = ((JSpinner.DefaultEditor) upperSpinner.getEditor());
         prefSize = field.getPreferredSize();
         prefSize = new Dimension(30, prefSize.height);
         field.setPreferredSize(prefSize);
-        
-        // checkbox
-        singleCheck = new JCheckBox("Single X");
-        singleCheck.addItemListener(single());
-        
+
         // n
-        nLabel = new JLabel("n: ");
+        JLabel nLabel = new JLabel("n: ");
         nSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Binomial.MAX_X, 1));
         field = ((JSpinner.DefaultEditor) nSpinner.getEditor());
         prefSize = field.getPreferredSize();
         prefSize = new Dimension(30, prefSize.height);
         field.setPreferredSize(prefSize);
         
-        // p
-        pLabel = new JLabel("p: ");
-        pField = new JTextField(6);
-        pField.setHorizontalAlignment(JTextField.RIGHT);
-        pSlider = new JSlider(JSlider.HORIZONTAL, 0, 1000, 500);
+        /*
+         * Add internal listeners
+         */
+        lowerSpinner.addChangeListener(new LowerSpinner());
+        upperSpinner.addChangeListener(new UpperSpinner());
+        nSpinner.addChangeListener(new UpperSpinner());
         
-        // b
-        updateButton = new JButton("Update Values");
-        bLabel = new JLabel("b: ");
-        bValueLabel = new JLabel("");
-    }
-    
-    private void addComponents() {
+        /*
+         * Add components
+         */
+        setLayout(new MigLayout("", "[][30][30, center][30]"));
+        
         add(xLabel);
-        add(xLowerSpinner);
+        add(lowerSpinner);
         add(toLabel);
-        add(xUpperSpinner, "wrap");
-        
-        add(singleCheck, "skip 3, span, split, wrap");
+        add(upperSpinner, "wrap");
         
         add(nLabel);
         add(nSpinner, "wrap");
         
-        add(pLabel);
-        add(pField, "span, split");
-        add(pSlider, "wrap 30");
-        
         add(updateButton, "span, split, wrap");
         
-        add(bLabel);
-        add(bValueLabel, "span, split");
     }
     
-    
-    
-
-    //--------------------------------
-    // Getters and setters
-    
-    public int getXLower() {
-        return (Integer) xLowerSpinner.getValue();
+    public interface Listener {
+        void valueChanged(Event event);
     }
     
-    public int getXUpper() {
-        return (Integer) xUpperSpinner.getValue();
+    public void addListener(Listener listener) {
+        listeners.add(listener);
     }
     
-    public boolean isSingle() {
-    	return singleCheck.isSelected();
-    }
-    
-    public int getN() {
-        return (Integer) nSpinner.getValue();
-    }
-    
-    public double getP() {
-        return Double.valueOf(pField.getText());
-    }
-    
-    public double getPSlider() {
-        return (Double) (pSlider.getValue() / 1000.0);
-    }
-    
-    
-    public void setBValue(double b) {
-        bValueLabel.setText(Double.toString(b));
-    }
-    
-    public void setXLower(int x) {
-        xLowerSpinner.setValue(x);
-    }
-    
-    public void setXUpper(int x) {
-        xUpperSpinner.setValue(x);
-    }
-    
-    public void setN(int x) {
-        nSpinner.setValue(x);
-    }
-    
-    public void setP(double p) {
-        pField.setText(Double.toString(p));
-    }
-    
-    public void setPSlider(double p) {
-        int value = (int) (p * 1000);
-        System.out.println(value);
+    public class Event {
+        public int lowerLimit;
+        public int upperLimit;
+        public int populationN;
+        public int sampleN;
         
-        pSlider.setValue(value);
+        private Event() {}
     }
-    
-    public void enableSingle() {
-    	xUpperSpinner.setEnabled(false);
-    	setXUpper(getXLower());
-    }
-    
-    public void disableSingle() {
-    	xUpperSpinner.setEnabled(true);
-    }
-    
-    private ItemListener single() {
-    	return new ItemListener() {
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			if (singleCheck.isSelected()) 
-				enableSingle();
-			else
-				disableSingle();
-			
-		}
-		};
-    }
-    
-    
-    //--------------------------------
-    // Listener setters
-    
-    public void addUpdateListener(ActionListener listener) {
-        updateButton.addActionListener(listener);
-    }
-    
-    public void addLowerSpinnerListener(ChangeListener listener) {
-        xLowerSpinner.addChangeListener(listener);
-    }
-    
-    public void addUpperSpinnerListener(ChangeListener listener) {
-        xUpperSpinner.addChangeListener(listener);
-    }
-    
-    public void addSingleListener(ItemListener listener) {
-    	singleCheck.addItemListener(listener);
-    }
-    
-    public void addNSpinnerListener(ChangeListener listener) {
-        nSpinner.addChangeListener(listener);
-    }
-    
-    public void addPFieldListener(ActionListener listener) {
-        pField.addActionListener(listener);
-    }
-    
-    public void addPSliderListener(ChangeListener listener) {
-        pSlider.addChangeListener(listener);
+          
+    private class LowerSpinner implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent arg0) {         
+            lowerLimit = (Integer) lowerSpinner.getValue();
+            if (lowerLimit < 0) {
+                lowerLimit = 0;
+            }
+            if (lowerLimit > upperLimit) {
+                upperLimit = lowerLimit;
+            }
+            if (lowerLimit >= populationN) {
+                populationN = upperLimit;
+            }
+
+            informListeners();
+        }
     }
 
+    private class UpperSpinner implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent arg0) {
+            upperLimit = (Integer) upperSpinner.getValue();
+            
+            if (upperLimit > Binomial.MAX_X) {
+                upperLimit = Binomial.MAX_X;
+            }
+            
+            if (upperLimit < lowerLimit) {
+                lowerLimit = upperLimit;   
+            }
+            
+            if (upperLimit > populationN) {
+                populationN = upperLimit;
+            }
+
+            informListeners();
+        }
+    }
+    
+    private class PopulationNSpinner implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent arg0) {
+            if (populationN < upperLimit) {
+                upperLimit = populationN;
+            }
+            
+            informListeners();
+        }
+    }
+    
+    private void informListeners() {
+        Event event = new Event();
+        event.lowerLimit = this.lowerLimit;
+        event.upperLimit = this.upperLimit;
+        event.populationN = this.populationN;
+        event.sampleN = this.sampleN;
+        for (Listener listener : listeners) {
+            listener.valueChanged(event);
+        }
+    }
 }

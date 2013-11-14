@@ -32,15 +32,7 @@ public class MainPanel extends JPanel {
         add(tabbedPane, "span, split");
     }
     
-    public InputPanel getInputPanel() {
-        return inputPanel;
-    }
-    
-    public OutputTable getOutputTable() {
-        return outputTable;
-    }
-    
-    public OutputGraph getOutputGraph() {
-        return outputGraph;
+    public void addListener(InputPanel.Listener listener) {
+        inputPanel.addListener(listener);        
     }
 }
