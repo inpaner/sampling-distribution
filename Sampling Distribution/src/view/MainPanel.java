@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import model.Binomial;
+import model.Sampler;
 import net.miginfocom.swing.MigLayout;
 
 public class MainPanel extends JPanel {
@@ -35,4 +36,9 @@ public class MainPanel extends JPanel {
     public void addListener(InputPanel.Listener listener) {
         inputPanel.addListener(listener);        
     }
+    
+    public void update(Sampler sampler) {
+        outputGraph.updateData(sampler);
+    }
+    
 }

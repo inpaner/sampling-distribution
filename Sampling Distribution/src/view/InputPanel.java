@@ -38,8 +38,10 @@ public class InputPanel extends JPanel {
     
     private JSpinner lowerSpinner;
     private JSpinner upperSpinner;
-    private JSpinner nSpinner;
-    private JButton updateButton;
+    private JSpinner populationSpinner;
+    private JSpinner sampleSpinner;
+    
+    private JButton generateButton;
     
     private int lowerLimit;
     private int upperLimit;
@@ -59,12 +61,12 @@ public class InputPanel extends JPanel {
         JRadioButton skewedRadio = new JRadioButton("Skewed");
         JRadioButton bimodalRadio = new JRadioButton("Bimodal");
         JRadioButton randomRadio = new JRadioButton("Random");
-        ButtonGroup generatorGroup = new ButtonGroup();
-        generatorGroup.add(uniformRadio);
-        generatorGroup.add(normalRadio);
-        generatorGroup.add(skewedRadio);
-        generatorGroup.add(bimodalRadio);
-        generatorGroup.add(randomRadio);
+        ButtonGroup distributionGroup = new ButtonGroup();
+        distributionGroup.add(uniformRadio);
+        distributionGroup.add(normalRadio);
+        distributionGroup.add(skewedRadio);
+        distributionGroup.add(bimodalRadio);
+        distributionGroup.add(randomRadio);
         
         Box radioBox = new Box(BoxLayout.X_AXIS);
         TitledBorder border = BorderFactory.createTitledBorder("Distribution");
@@ -94,20 +96,32 @@ public class InputPanel extends JPanel {
         prefSize = new Dimension(30, prefSize.height);
         field.setPreferredSize(prefSize);
 
-        // n
-        JLabel nLabel = new JLabel("n: ");
-        nSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Binomial.MAX_X, 1));
-        field = ((JSpinner.DefaultEditor) nSpinner.getEditor());
+        // population n
+        JLabel populationLabel = new JLabel("N: ");
+        populationSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Binomial.MAX_X, 1));
+        field = ((JSpinner.DefaultEditor) populationSpinner.getEditor());
         prefSize = field.getPreferredSize();
         prefSize = new Dimension(30, prefSize.height);
         field.setPreferredSize(prefSize);
+        
+        // sample n
+        JLabel sampleLabel = new JLabel("n: ");
+        sampleSpinner = new JSpinner(new SpinnerNumberModel(1, 0, Binomial.MAX_X, 1));
+        field = ((JSpinner.DefaultEditor) sampleSpinner.getEditor());
+        prefSize = field.getPreferredSize();
+        prefSize = new Dimension(30, prefSize.height);
+        field.setPreferredSize(prefSize);
+        
+        // generate button
+        generateButton = new JButton("Generate");
         
         /*
          * Add internal listeners
          */
         lowerSpinner.addChangeListener(new LowerSpinner());
         upperSpinner.addChangeListener(new UpperSpinner());
-        nSpinner.addChangeListener(new UpperSpinner());
+        populationSpinner.addChangeListener(new PopulationSpinner());
+        sampleSpinner.addChangeListener(new SampleSpinner());
         
         /*
          * Add components
@@ -120,15 +134,19 @@ public class InputPanel extends JPanel {
         add(toLabel);
         add(upperSpinner, "wrap");
         
-        add(nLabel);
-        add(nSpinner, "wrap");
+        add(populationLabel);
+        add(populationSpinner, "wrap");
         
-        //add(updateButton, "span, split, wrap");
+        add(sampleLabel);
+        add(sampleSpinner, "wrap");
+        
+        add(generateButton, "span, split, wrap");
         
     }
     
     public interface Listener {
-        void valueChanged(Event event);
+        void populationValuesChanged(Event event);
+        void sampleValuesChanged(Event event);
     }
     
     public void addListener(Listener listener) {
@@ -141,9 +159,16 @@ public class InputPanel extends JPanel {
         public int populationN;
         public int sampleN;
         
-        private Event() {}
+        public Event() {}
     }
-          
+    
+    public void updateValues(Event event) {
+        lowerSpinner.setValue(event.lowerLimit);
+        upperSpinner.setValue(event.upperLimit);
+        populationSpinner.setValue(event.populationN);
+        sampleSpinner.setValue(event.sampleN);
+    }
+    
     private class LowerSpinner implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent arg0) {         
@@ -154,17 +179,14 @@ public class InputPanel extends JPanel {
             if (lowerLimit > upperLimit) {
                 upperLimit = lowerLimit;
             }
-            if (lowerLimit >= populationN) {
-                populationN = upperLimit;
-            }
-
-            informListeners();
+            
+            populationValuesChanged();
         }
     }
 
     private class UpperSpinner implements ChangeListener {
         @Override
-        public void stateChanged(ChangeEvent arg0) {
+        public void stateChanged(ChangeEvent ev) {
             upperLimit = (Integer) upperSpinner.getValue();
             
             if (upperLimit > Binomial.MAX_X) {
@@ -175,33 +197,46 @@ public class InputPanel extends JPanel {
                 lowerLimit = upperLimit;   
             }
             
-            if (upperLimit > populationN) {
-                populationN = upperLimit;
-            }
-
-            informListeners();
+            populationValuesChanged();
         }
     }
     
-    private class PopulationNSpinner implements ChangeListener {
+    private class PopulationSpinner implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent arg0) {
-            if (populationN < upperLimit) {
-                upperLimit = populationN;
-            }
+            populationN = (Integer) populationSpinner.getValue();
             
-            informListeners();
+            populationValuesChanged();
         }
     }
     
-    private void informListeners() {
+    private class SampleSpinner implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent arg0) {
+            sampleN = (Integer) sampleSpinner.getValue();
+            sampleValuesChanged();
+        }
+    }
+    
+    private Event generateEvent() {
         Event event = new Event();
         event.lowerLimit = this.lowerLimit;
         event.upperLimit = this.upperLimit;
         event.populationN = this.populationN;
         event.sampleN = this.sampleN;
+        return event;
+    }
+    
+    private void populationValuesChanged() {
+        Event event = generateEvent();
+        updateValues(event);
+    }
+    
+    private void sampleValuesChanged() {
+        Event event = generateEvent();
+        updateValues(event);
         for (Listener listener : listeners) {
-            listener.valueChanged(event);
+            listener.sampleValuesChanged(event);
         }
     }
 }
