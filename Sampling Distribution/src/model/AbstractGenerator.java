@@ -13,11 +13,25 @@ public abstract class AbstractGenerator {
     protected double variance;
     protected Map<Integer, Integer> values; 
     
+    public static void main(String[] args) {
+        AbstractGenerator n = new BimodalGenerator(0, 100, 10000);
+        Map<Integer, Integer> values = n.getValues();
+        
+        for (Integer number : values.keySet()) {
+            int count = values.get(number);
+            System.out.println(number + ": " + count);
+        }
+        System.out.println("T Mean: " + n.mean);
+        System.out.println("A Mean: " + n.getActualMean());
+        System.out.println("T Variance: " + n.variance);
+        System.out.println("A Variance: " + n.getActualVariance());
+    }
+    
     protected AbstractGenerator(int lowerLimit, int upperLimit, int n) {
         this.lowerLimit = lowerLimit;
         this.upperLimit = upperLimit;
         this.n = n;
-        rand = new Random(System.currentTimeMillis());
+        rand = new Random();
         mean = (upperLimit + lowerLimit) / 2;
         
     }
