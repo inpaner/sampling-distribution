@@ -2,13 +2,16 @@ package view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.crypto.spec.PSource.PSpecified;
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -32,6 +35,7 @@ import javax.swing.event.ChangeListener;
 import org.apache.commons.math3.genetics.NPointCrossover;
 
 import model.Binomial;
+import model.Generator;
 import net.miginfocom.swing.MigLayout;
 
 public class InputPanel extends JPanel {
@@ -55,18 +59,19 @@ public class InputPanel extends JPanel {
          * Initialize Components
          */
         
-        // Generators
-        JRadioButton uniformRadio = new JRadioButton("Uniform");
-        JRadioButton normalRadio = new JRadioButton("Normal");
-        JRadioButton skewedRadio = new JRadioButton("Skewed");
-        JRadioButton bimodalRadio = new JRadioButton("Bimodal");
-        JRadioButton randomRadio = new JRadioButton("Random");
+        // Generator Radio buttons
+        GeneratorRadio uniformRadio = new GeneratorRadio("Uniform", Generator.UNIFORM);
+        GeneratorRadio normalRadio = new GeneratorRadio("Normal", Generator.NORMAL);
+        GeneratorRadio skewedRadio = new GeneratorRadio("Skewed", Generator.SKEW);
+        GeneratorRadio bimodalRadio = new GeneratorRadio("Bimodal", Generator.BIMODAL);
+        GeneratorRadio randomRadio = new GeneratorRadio("Random", Generator.RANDOM);
         ButtonGroup distributionGroup = new ButtonGroup();
         distributionGroup.add(uniformRadio);
         distributionGroup.add(normalRadio);
         distributionGroup.add(skewedRadio);
         distributionGroup.add(bimodalRadio);
         distributionGroup.add(randomRadio);
+        uniformRadio.setSelected(true);
         
         Box radioBox = new Box(BoxLayout.X_AXIS);
         TitledBorder border = BorderFactory.createTitledBorder("Distribution");
@@ -115,13 +120,21 @@ public class InputPanel extends JPanel {
         // generate button
         generateButton = new JButton("Generate");
         
+        initValues();
+        
         /*
          * Add internal listeners
          */
+        RadioListener radioListener = new RadioListener();
+        for (Enumeration<AbstractButton> buttons = distributionGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+            button.addActionListener(radioListener);
+        }
         lowerSpinner.addChangeListener(new LowerSpinner());
         upperSpinner.addChangeListener(new UpperSpinner());
         populationSpinner.addChangeListener(new PopulationSpinner());
         sampleSpinner.addChangeListener(new SampleSpinner());
+        generateButton.addActionListener(new GenerateListener());        
         
         /*
          * Add components
@@ -147,6 +160,8 @@ public class InputPanel extends JPanel {
     public interface Listener {
         void populationValuesChanged(Event event);
         void sampleValuesChanged(Event event);
+        public abstract void generatorChanged(Event event, Generator generator);
+        public abstract void generate(Event event);
     }
     
     public void addListener(Listener listener) {
@@ -168,6 +183,55 @@ public class InputPanel extends JPanel {
         populationSpinner.setValue(event.populationN);
         sampleSpinner.setValue(event.sampleN);
     }
+    
+    private void initValues() {
+        lowerLimit = 0;
+        upperLimit = 50;
+        populationN = 100;
+        sampleN = 1;
+        updateValues(generateEvent());
+    }
+    
+    private Event generateEvent() {
+        Event event = new Event();
+        event.lowerLimit = this.lowerLimit;
+        event.upperLimit = this.upperLimit;
+        event.populationN = this.populationN;
+        event.sampleN = this.sampleN;
+        return event;
+    }
+    
+    private void populationValuesChanged() {
+        Event event = generateEvent();
+        updateValues(event);
+        for (Listener listener : listeners) {
+            listener.populationValuesChanged(event);
+        }
+    }
+    
+    private void sampleValuesChanged() {
+        Event event = generateEvent();
+        updateValues(event);
+        for (Listener listener : listeners) {
+            listener.sampleValuesChanged(event);
+        }
+    }
+
+    /*
+     * Serves as a struct to contain the Generator Enum
+     */
+    @SuppressWarnings("serial")
+    private class GeneratorRadio extends JRadioButton {
+        private Generator generator;
+        private GeneratorRadio(String title, Generator generator) {
+            super(title);
+            this.generator = generator;
+        }
+    }
+    
+    /*
+     * Internal listeners
+     */
     
     private class LowerSpinner implements ChangeListener {
         @Override
@@ -200,16 +264,15 @@ public class InputPanel extends JPanel {
             populationValuesChanged();
         }
     }
-    
+
     private class PopulationSpinner implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent arg0) {
             populationN = (Integer) populationSpinner.getValue();
-            
             populationValuesChanged();
         }
     }
-    
+
     private class SampleSpinner implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent arg0) {
@@ -217,26 +280,28 @@ public class InputPanel extends JPanel {
             sampleValuesChanged();
         }
     }
-    
-    private Event generateEvent() {
-        Event event = new Event();
-        event.lowerLimit = this.lowerLimit;
-        event.upperLimit = this.upperLimit;
-        event.populationN = this.populationN;
-        event.sampleN = this.sampleN;
-        return event;
-    }
-    
-    private void populationValuesChanged() {
-        Event event = generateEvent();
-        updateValues(event);
-    }
-    
-    private void sampleValuesChanged() {
-        Event event = generateEvent();
-        updateValues(event);
-        for (Listener listener : listeners) {
-            listener.sampleValuesChanged(event);
+
+    private class RadioListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Event event = generateEvent();
+            
+            GeneratorRadio radio = (GeneratorRadio) e.getSource();
+            for (Listener listener : listeners) {
+                listener.generatorChanged(event, radio.generator);
+            }
         }
+    }
+    
+    private class GenerateListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            Event event = generateEvent();
+            
+            for (Listener listener : listeners) {
+                listener.generate(event);
+            }
+        }
+        
     }
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,6 +17,8 @@ public class Sampler {
     private Double meanOfMeans;
     private Map<Double, Integer> meansCount;
     private Double varianceOfMeans;
+    private List<String> permutations;
+    private List<Double> permutationMeans;
     
     public Sampler(Map<Integer, Integer> mappedValues, int n) {
         this.n = n;
@@ -61,15 +64,18 @@ public class Sampler {
         int combinationsCount = 0;
         double sumOfSquares = 0;
         meansCount = new TreeMap<>();
-        
+        permutations = new ArrayList<>();
+        permutationMeans = new ArrayList<>();
         generator = Factory.createPermutationWithRepetitionGenerator(values, n);
         for (ICombinatoricsVector<Integer> permutation : generator) {
+            permutations.add(permutation.getVector().toString());
             combinationsCount++;
             double sum = 0.0;
             for (Integer number : permutation) {
                 sum += number;
             }
             double mean = sum / permutation.getSize();
+            permutationMeans.add(mean);
             placeInMeansCount(mean);
             sumOfMeans += mean;
             sumOfSquares += Math.pow(mean, 2);
@@ -107,5 +113,13 @@ public class Sampler {
             solve();
         }
         return varianceOfMeans;   
+    }
+    
+    public List<String> getPermutations() {
+        return permutations;
+    }
+    
+    public List<Double> getPermutationMeans() {
+        return permutationMeans;
     }
 }

@@ -10,7 +10,7 @@ import net.miginfocom.swing.MigLayout;
 public class MainPanel extends JPanel {
     private InputPanel inputPanel;
     private JTabbedPane tabbedPane;
-    private OutputTable outputTable;
+    private MeansTable meansTable;
     private OutputGraph outputGraph;
     
     public MainPanel() {
@@ -22,9 +22,9 @@ public class MainPanel extends JPanel {
     private void initComponents() {
         inputPanel = new InputPanel();
         tabbedPane = new JTabbedPane();
-        outputTable = new OutputTable();
+        meansTable = new MeansTable();
         outputGraph = new OutputGraph();
-        tabbedPane.addTab("Table", outputTable);
+        tabbedPane.addTab("Table", meansTable);
         tabbedPane.addTab("Graph", outputGraph);
     }
     
@@ -39,6 +39,7 @@ public class MainPanel extends JPanel {
     
     public void update(Sampler sampler) {
         outputGraph.updateData(sampler);
+        meansTable.updateData(sampler);
     }
     
 }

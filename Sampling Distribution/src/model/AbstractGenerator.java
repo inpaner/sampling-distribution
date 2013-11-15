@@ -85,6 +85,10 @@ public abstract class AbstractGenerator {
         return values;
     }
     
+    public void randomize() {
+        values = null;
+    }
+    
     abstract int getNext();
 
 }

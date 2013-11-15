@@ -1,24 +1,27 @@
 package view;
 
+import java.util.Map;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import model.Binomial;
+import model.Sampler;
 
-public class OutputTable extends JPanel {
+public class MeansTable extends JPanel {
     JScrollPane scrollPane;
     JTable table;
     DefaultTableModel model;
     
-    public OutputTable() {
+    public MeansTable() {
         initComponents();
         addComponents();
     }
     
     private void initComponents() {
-        String[] columnNames = new String[] {"x", "b"};
+        String[] columnNames = new String[] {"mean", "count"};
         
         model = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -39,17 +42,16 @@ public class OutputTable extends JPanel {
         add(scrollPane);
     }
     
-    public void updateData(Binomial binomial) {
+    public void updateData(Sampler sampler) {
         for (int i = model.getRowCount() - 1; i >= 0 ; i--) {
             model.removeRow(i);
         }
+        
         Object[] data = new Object[2];
         
-        
-        for (int i = 0; i < binomial.probabilities().length; i++) {
-            data[0] = binomial.getStart() + i;
-            double rounded = (double) Math.round(binomial.probabilities()[i] * 10000) / 10000;
-            data[1] = rounded;
+        for (Map.Entry<Double, Integer> entry : sampler.getMeansCount().entrySet()) {
+            data[0] = entry.getKey();
+            data[1] = entry.getValue();
             model.addRow(data);
         }
     }

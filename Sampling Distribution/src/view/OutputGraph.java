@@ -30,9 +30,9 @@ public class OutputGraph extends JPanel{
 	public OutputGraph() {
 		dataset = new XYSeriesCollection();
         
-        JFreeChart chart = ChartFactory.createXYLineChart("Binomial Distribution",
-                "Value",
-                "Probability",
+        JFreeChart chart = ChartFactory.createXYLineChart("Probability Distribution",
+                "Mean",
+                "Count",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
