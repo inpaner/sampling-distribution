@@ -34,7 +34,7 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.commons.math3.genetics.NPointCrossover;
 
-import model.Binomial;
+import model.AbstractGenerator;
 import model.Generator;
 import net.miginfocom.swing.MigLayout;
 
@@ -87,7 +87,7 @@ public class InputPanel extends JPanel {
         
         // x
         JLabel xLabel = new JLabel("x: ");
-        lowerSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Binomial.MAX_X, 1));
+        lowerSpinner = new JSpinner(new SpinnerNumberModel(0, 0, AbstractGenerator.MAX_N, 1));
         JComponent field = ((JSpinner.DefaultEditor) lowerSpinner.getEditor());
         Dimension prefSize = field.getPreferredSize();
         prefSize = new Dimension(30, prefSize.height);
@@ -95,7 +95,7 @@ public class InputPanel extends JPanel {
         
         JLabel toLabel = new JLabel("to: ");
         
-        upperSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Binomial.MAX_X, 1));
+        upperSpinner = new JSpinner(new SpinnerNumberModel(0, 0, AbstractGenerator.MAX_N, 1));
         field = ((JSpinner.DefaultEditor) upperSpinner.getEditor());
         prefSize = field.getPreferredSize();
         prefSize = new Dimension(30, prefSize.height);
@@ -103,7 +103,7 @@ public class InputPanel extends JPanel {
 
         // population n
         JLabel populationLabel = new JLabel("N: ");
-        populationSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Binomial.MAX_X, 1));
+        populationSpinner = new JSpinner(new SpinnerNumberModel(1, 1, AbstractGenerator.MAX_N, 1));
         field = ((JSpinner.DefaultEditor) populationSpinner.getEditor());
         prefSize = field.getPreferredSize();
         prefSize = new Dimension(30, prefSize.height);
@@ -111,7 +111,7 @@ public class InputPanel extends JPanel {
         
         // sample n
         JLabel sampleLabel = new JLabel("n: ");
-        sampleSpinner = new JSpinner(new SpinnerNumberModel(1, 0, Binomial.MAX_X, 1));
+        sampleSpinner = new JSpinner(new SpinnerNumberModel(1, 0, AbstractGenerator.MAX_N, 1));
         field = ((JSpinner.DefaultEditor) sampleSpinner.getEditor());
         prefSize = field.getPreferredSize();
         prefSize = new Dimension(30, prefSize.height);
@@ -217,7 +217,7 @@ public class InputPanel extends JPanel {
         }
     }
 
-    /*
+    /**
      * Serves as a struct to contain the Generator Enum
      */
     @SuppressWarnings("serial")
@@ -253,8 +253,8 @@ public class InputPanel extends JPanel {
         public void stateChanged(ChangeEvent ev) {
             upperLimit = (Integer) upperSpinner.getValue();
             
-            if (upperLimit > Binomial.MAX_X) {
-                upperLimit = Binomial.MAX_X;
+            if (upperLimit > AbstractGenerator.MAX_N) {
+                upperLimit = AbstractGenerator.MAX_N;
             }
             
             if (upperLimit < lowerLimit) {

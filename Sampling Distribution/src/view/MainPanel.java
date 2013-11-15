@@ -3,7 +3,6 @@ package view;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import model.Binomial;
 import model.Sampler;
 import net.miginfocom.swing.MigLayout;
 

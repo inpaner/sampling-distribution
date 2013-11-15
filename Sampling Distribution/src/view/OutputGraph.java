@@ -14,7 +14,6 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import model.Binomial;
 import model.Sampler;
 
 /* 

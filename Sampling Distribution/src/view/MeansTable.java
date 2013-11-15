@@ -7,7 +7,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import model.Binomial;
 import model.Sampler;
 
 public class MeansTable extends JPanel {

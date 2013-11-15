@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.TreeMap;
 
 public abstract class AbstractGenerator {
+    public static final int MAX_N = 1000;
     protected int lowerLimit;
     protected int upperLimit;
     protected int n;
