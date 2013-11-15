@@ -1,5 +1,6 @@
 package view;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JPanel;
@@ -9,13 +10,13 @@ import javax.swing.table.DefaultTableModel;
 
 import model.Sampler;
 
-public class MeansTable extends JPanel {
+public class PermutationsTable extends JPanel {
     JScrollPane scrollPane;
     JTable table;
     DefaultTableModel model;
     
-    public MeansTable() {
-        String[] columnNames = new String[] {"mean", "count"};
+    public PermutationsTable() {
+        String[] columnNames = new String[] {"Permutation", "Mean"};
         
         model = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -33,6 +34,7 @@ public class MeansTable extends JPanel {
         add(scrollPane);
     }
     
+    
     public void updateData(Sampler sampler) {
         for (int i = model.getRowCount() - 1; i >= 0 ; i--) {
             model.removeRow(i);
@@ -40,10 +42,14 @@ public class MeansTable extends JPanel {
         
         Object[] data = new Object[2];
         
-        for (Map.Entry<Double, Integer> entry : sampler.getMeansCount().entrySet()) {
-            data[0] = entry.getKey();
-            data[1] = entry.getValue();
+        List<String> permutations = sampler.getPermutations();
+        List<Double> means= sampler.getPermutationMeans();
+        
+        for (int i = 0; i < permutations.size(); i++) {
+            data[0] = permutations.get(i);
+            data[1] = means.get(i);
             model.addRow(data);
         }
     }
+    
 }

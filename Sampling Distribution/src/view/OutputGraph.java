@@ -29,7 +29,7 @@ public class OutputGraph extends JPanel{
 	public OutputGraph() {
 		dataset = new XYSeriesCollection();
         
-        JFreeChart chart = ChartFactory.createXYLineChart("Probability Distribution",
+        JFreeChart chart = ChartFactory.createXYLineChart("Distribution",
                 "Mean",
                 "Count",
                 dataset,
