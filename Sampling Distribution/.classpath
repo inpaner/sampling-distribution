@@ -10,12 +10,7 @@
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.15.jar"/>
 	<classpathentry kind="lib" path="lib/jcommon-1.0.18.jar"/>
 	<classpathentry kind="lib" path="lib/miglayout-4.0.jar"/>
-	<classpathentry kind="lib" path="D:/Dropbox/Programming/Commons/uncommons-maths-1.2.3/uncommons-maths-1.2.3.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/D:/Dropbox/Programming/Commons/uncommons-maths-1.2.3/docs/api/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="D:/Dropbox/Programming/Commons/combinatoricslib-2.0/combinatoricslib-2.0.jar">
+	<classpathentry kind="lib" path="lib/combinatoricslib-2.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:/D:/Dropbox/Programming/Commons/combinatoricslib-2.0/combinatoricslib-2.0_doc.zip!/"/>
 		</attributes>
