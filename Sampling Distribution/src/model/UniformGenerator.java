@@ -10,7 +10,7 @@ public class UniformGenerator extends AbstractGenerator {
     @Override
     int getNext() {
         int range = upperLimit - lowerLimit;
-        return rand.nextInt(range) + lowerLimit;
+        return rand.nextInt(range + 1) + lowerLimit;
     }
 
 }
