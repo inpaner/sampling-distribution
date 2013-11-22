@@ -33,32 +33,6 @@ public class Sampler {
         }
     }
     
-    public static void main(String[] args) {
-        AbstractGenerator n = new SkewGenerator(0, 30, 50);
-        Map<Integer, Integer> values = n.getValues();
-        boolean log = true;
-        if (log) {
-            for (Integer number : values.keySet()) {
-                int count = values.get(number);
-                System.out.println(number + ": " + count);
-            }
-        }
-        Sampler sampler = new Sampler(values, 3);
-        
-        Map<Double, Integer> meanOfMeans = sampler.getMeansCount();
-        if (log) {
-            for (Double mean : meanOfMeans.keySet()) {
-                int count = meanOfMeans.get(mean);
-                System.out.println(mean + ": " + count);
-            }
-        }
-        System.out.println("Orig mean: " + n.getActualMean());
-        System.out.println("Mean of means: " + sampler.getMeanOfMeans());
-        System.out.println("Orig variance: " + n.getActualVariance());
-        System.out.println("Variance of means: " + sampler.getVarianceOfMeans());
-    }
-        
-    
     private void solve() {
         double sumOfMeans = 0.0;
         int combinationsCount = 0;
@@ -66,17 +40,19 @@ public class Sampler {
         meansCount = new TreeMap<>();
         permutations = new ArrayList<>();
         permutationMeans = new ArrayList<>();
+        
         generator = Factory.createPermutationWithRepetitionGenerator(values, n);
         for (ICombinatoricsVector<Integer> permutation : generator) {
             permutations.add(permutation.getVector().toString());
             combinationsCount++;
             double sum = 0.0;
+            
             for (Integer number : permutation) {
                 sum += number;
             }
             double mean = sum / permutation.getSize();
             permutationMeans.add(mean);
-            placeInMeansCount(mean);
+            storeInMeansCountMap(mean);
             sumOfMeans += mean;
             sumOfSquares += Math.pow(mean, 2);
         }
@@ -85,7 +61,7 @@ public class Sampler {
         varianceOfMeans = meanOfSquares - Math.pow(meanOfMeans, 2);
     }
     
-    private void placeInMeansCount(double mean) {
+    private void storeInMeansCountMap(double mean) {
         Integer count = meansCount.get(mean);
         if (count == null) {
             count = 0;
@@ -116,10 +92,16 @@ public class Sampler {
     }
     
     public List<String> getPermutations() {
+        if (permutations == null) {
+            solve();
+        }
         return permutations;
     }
     
     public List<Double> getPermutationMeans() {
+        if (permutationMeans == null) {
+            solve();
+        }
         return permutationMeans;
     }
 }

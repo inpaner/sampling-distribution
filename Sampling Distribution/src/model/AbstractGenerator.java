@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.TreeMap;
 
 public abstract class AbstractGenerator {
-    public static final int MAX_N = 1000;
+    public static final int MAX_N = 10000;
     protected int lowerLimit;
     protected int upperLimit;
     protected int n;
@@ -13,21 +13,7 @@ public abstract class AbstractGenerator {
     protected double mean;
     protected double variance;
     protected Map<Integer, Integer> values; 
-    
-    public static void main(String[] args) {
-        AbstractGenerator n = new BimodalGenerator(0, 100, 10000);
-        Map<Integer, Integer> values = n.getValues();
-        
-        for (Integer number : values.keySet()) {
-            int count = values.get(number);
-            System.out.println(number + ": " + count);
-        }
-        System.out.println("T Mean: " + n.mean);
-        System.out.println("A Mean: " + n.getActualMean());
-        System.out.println("T Variance: " + n.variance);
-        System.out.println("A Variance: " + n.getActualVariance());
-    }
-    
+
     protected AbstractGenerator(int lowerLimit, int upperLimit, int n) {
         this.lowerLimit = lowerLimit;
         this.upperLimit = upperLimit;
@@ -36,10 +22,11 @@ public abstract class AbstractGenerator {
         mean = (upperLimit + lowerLimit) / 2;
     }
     
+    abstract int getNext();
+    
     protected void generateValues() {
         int range = upperLimit - lowerLimit;
         variance = rand.nextInt(range) + rand.nextGaussian();
-        
         values = new TreeMap<>();
         
         for (int i = 0; i < n; i++) {
@@ -58,18 +45,19 @@ public abstract class AbstractGenerator {
             generateValues();
         
         int realN = 0;
-        double result = 0;
+        double sum = 0;
         for (Integer number : values.keySet()) {
             int count = values.get(number);
             realN += count;
-            result = result + number * count;
+            sum = sum + number * count;
         }
-        return result / realN;
+        return sum / realN;
     }
     
     public double getActualVariance() {
         if (values == null)
             generateValues();
+        
         double meanOfSquares = 0;
         for (Integer number : values.keySet()) {
             int count = values.get(number);
@@ -80,7 +68,7 @@ public abstract class AbstractGenerator {
         return meanOfSquares - squareOfMeans;
     }
     
-    public final Map<Integer, Integer>  getValues() {
+    public Map<Integer, Integer> getValues() {
         if (values == null)
             generateValues();
         return values;
@@ -89,7 +77,4 @@ public abstract class AbstractGenerator {
     public void randomize() {
         values = null;
     }
-    
-    abstract int getNext();
-
 }

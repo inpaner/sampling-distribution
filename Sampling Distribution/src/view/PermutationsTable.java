@@ -1,7 +1,6 @@
 package view;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -10,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 
 import model.Sampler;
 
+@SuppressWarnings("serial")
 public class PermutationsTable extends JPanel {
     JScrollPane scrollPane;
     JTable table;
@@ -40,11 +40,10 @@ public class PermutationsTable extends JPanel {
             model.removeRow(i);
         }
         
-        Object[] data = new Object[2];
-        
         List<String> permutations = sampler.getPermutations();
         List<Double> means= sampler.getPermutationMeans();
         
+        Object[] data = new Object[2];
         for (int i = 0; i < permutations.size(); i++) {
             data[0] = permutations.get(i);
             data[1] = means.get(i);

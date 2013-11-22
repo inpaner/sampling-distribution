@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 
 public class RandomGenerator extends AbstractGenerator {
-    private static final int SENSITIVITY = 10000000;
+    private static final int SENSITIVITY = 1000;
     public RandomGenerator(int lowerLimit, int upperLimit, int n) {
         super(lowerLimit, upperLimit, n);
     }
@@ -37,12 +37,10 @@ public class RandomGenerator extends AbstractGenerator {
         int mapIndex = 0;
         for (int i = lowerLimit; i <= upperLimit; i++) {
             double ratio = distribution.get(mapIndex) / seedCount;
-            System.out.println(ratio);
             double count = n * ratio;
             values.put(i, (int) count);
             
             mapIndex++;
         }
-
     }
 }

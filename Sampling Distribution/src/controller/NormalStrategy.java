@@ -9,5 +9,4 @@ public class NormalStrategy implements GeneratorStrategy {
     public AbstractGenerator getGenerator(int lowerLimit, int upperLimit, int n) {
         return new NormalGenerator(lowerLimit, upperLimit, n);
     }
-
 }

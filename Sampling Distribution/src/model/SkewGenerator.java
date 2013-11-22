@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Map;
-
 /**
  * http://stackoverflow.com/a/13548135
  */
@@ -23,5 +21,4 @@ public class SkewGenerator extends AbstractGenerator {
         
         return (int) retval;
     }
-
 }

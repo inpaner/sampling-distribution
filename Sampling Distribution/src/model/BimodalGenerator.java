@@ -1,14 +1,9 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.TreeMap;
-
-
 public class BimodalGenerator extends AbstractGenerator {
     protected double mean2;
     protected double variance2;
+    
     public BimodalGenerator(int lowerLimit, int upperLimit, int n) {
         super(lowerLimit, upperLimit, n);
         
@@ -16,7 +11,6 @@ public class BimodalGenerator extends AbstractGenerator {
         mean = rand.nextInt(range) + lowerLimit;
         mean2 = rand.nextInt(range) + lowerLimit;
         variance2 = rand.nextInt(range) + rand.nextGaussian();
-        
     }
 
     @Override
@@ -37,6 +31,4 @@ public class BimodalGenerator extends AbstractGenerator {
         
         return (int) retval;
     }
-    
-
 }

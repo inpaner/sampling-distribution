@@ -13,6 +13,7 @@ public class Main {
     private AbstractGenerator generator;
     private Sampler sampler;
     private GeneratorStrategy strategy;
+    
     public static void main(String[] args) {
         new Main();
     }
@@ -77,7 +78,5 @@ public class Main {
             generator.randomize();
             updateEverything(event);
         }
-
     }
-
 }

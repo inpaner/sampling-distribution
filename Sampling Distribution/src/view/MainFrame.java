@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 
+@SuppressWarnings("serial")
 public class MainFrame extends JFrame {
     private JComponent component;
 
@@ -41,7 +42,6 @@ public class MainFrame extends JFrame {
         this.component = component;
         Thread controller = new setThread();
         controller.start();
-        
     }
     
     private class setThread extends Thread {
@@ -59,7 +59,4 @@ public class MainFrame extends JFrame {
             validate();
         }
     }
-    
-    
-
 }

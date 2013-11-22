@@ -9,10 +9,11 @@ import javax.swing.table.DefaultTableModel;
 
 import model.Sampler;
 
+@SuppressWarnings("serial")
 public class MeansTable extends JPanel {
-    JScrollPane scrollPane;
-    JTable table;
-    DefaultTableModel model;
+    private JScrollPane scrollPane;
+    private JTable table;
+    private DefaultTableModel model;
     
     public MeansTable() {
         String[] columnNames = new String[] {"mean", "count"};
@@ -39,7 +40,6 @@ public class MeansTable extends JPanel {
         }
         
         Object[] data = new Object[2];
-        
         for (Map.Entry<Double, Integer> entry : sampler.getMeansCount().entrySet()) {
             data[0] = entry.getKey();
             data[1] = entry.getValue();

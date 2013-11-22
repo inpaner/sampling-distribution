@@ -9,5 +9,4 @@ public class RandomStrategy implements GeneratorStrategy {
     public AbstractGenerator getGenerator(int lowerLimit, int upperLimit, int n) {
         return new RandomGenerator(lowerLimit, upperLimit, n);
     }
-
 }

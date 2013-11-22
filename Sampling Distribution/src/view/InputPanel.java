@@ -1,57 +1,45 @@
 package view;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.crypto.spec.PSource.PSpecified;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSlider;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import org.apache.commons.math3.genetics.NPointCrossover;
 
 import model.AbstractGenerator;
 import model.Generator;
 import net.miginfocom.swing.MigLayout;
 
+@SuppressWarnings("serial")
 public class InputPanel extends JPanel {
     
     private JSpinner lowerSpinner;
     private JSpinner upperSpinner;
     private JSpinner populationSpinner;
     private JSpinner sampleSpinner;
-    
     private JButton generateButton;
-    
     private int lowerLimit;
     private int upperLimit;
     private int populationN;
     private int sampleN;
-    
+
     private List<Listener> listeners = new ArrayList<>();
     
     public InputPanel() {
@@ -154,27 +142,6 @@ public class InputPanel extends JPanel {
         add(sampleSpinner, "wrap");
         
         add(generateButton, "span, split, wrap");
-        
-    }
-    
-    public interface Listener {
-        void populationValuesChanged(Event event);
-        void sampleValuesChanged(Event event);
-        public abstract void generatorChanged(Event event, Generator generator);
-        public abstract void generate(Event event);
-    }
-    
-    public void addListener(Listener listener) {
-        listeners.add(listener);
-    }
-    
-    public class Event {
-        public int lowerLimit;
-        public int upperLimit;
-        public int populationN;
-        public int sampleN;
-        
-        public Event() {}
     }
     
     public void updateValues(Event event) {
@@ -217,10 +184,33 @@ public class InputPanel extends JPanel {
         }
     }
 
+    /*
+     * Class Event and Listener
+     */
+    
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+    }
+    
+    public interface Listener {
+        void populationValuesChanged(Event event);
+        void sampleValuesChanged(Event event);
+        public abstract void generatorChanged(Event event, Generator generator);
+        public abstract void generate(Event event);
+    }
+ 
+    public class Event {
+        public int lowerLimit;
+        public int upperLimit;
+        public int populationN;
+        public int sampleN;
+        
+        public Event() {}
+    }
+    
     /**
      * Serves as a struct to contain the Generator Enum
      */
-    @SuppressWarnings("serial")
     private class GeneratorRadio extends JRadioButton {
         private Generator generator;
         private GeneratorRadio(String title, Generator generator) {
@@ -228,6 +218,7 @@ public class InputPanel extends JPanel {
             this.generator = generator;
         }
     }
+    
     
     /*
      * Internal listeners
@@ -302,6 +293,5 @@ public class InputPanel extends JPanel {
                 listener.generate(event);
             }
         }
-        
     }
 }

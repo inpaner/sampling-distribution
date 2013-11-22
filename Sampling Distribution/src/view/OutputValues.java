@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 import model.Sampler;
 
+@SuppressWarnings("serial")
 public class OutputValues extends JPanel {
     private JLabel mean;
     private JLabel variance;

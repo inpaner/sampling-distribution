@@ -6,6 +6,7 @@ import javax.swing.JTabbedPane;
 import model.Sampler;
 import net.miginfocom.swing.MigLayout;
 
+@SuppressWarnings("serial")
 public class MainPanel extends JPanel {
     private InputPanel inputPanel;
     private JTabbedPane tabbedPane;
@@ -42,5 +43,4 @@ public class MainPanel extends JPanel {
         meansTable.updateData(sampler);
         permutationsTable.updateData(sampler);
     }
-    
 }

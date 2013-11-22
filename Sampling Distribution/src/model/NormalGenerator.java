@@ -1,33 +1,15 @@
 package model;
 
-import java.util.Map;
-
 public class NormalGenerator extends AbstractGenerator {
-    public static void main(String[] args) {
-        NormalGenerator n = new NormalGenerator(0, 100, 1000);
-        Map<Integer, Integer> values = n.getValues();
-        
-        for (Integer number : values.keySet()) {
-            int count = values.get(number);
-            System.out.println(number + ": " + count);
-        }
-        System.out.println(n.variance);
-        System.out.println(n.getActualMean());
-        System.out.println(n.getActualVariance());
-    }
     
     public NormalGenerator(int lowerLimit, int upperLimit, int n) {
-        super(lowerLimit, upperLimit, n);
-        mean = (upperLimit + lowerLimit) / 2;
-        
+        super(lowerLimit, upperLimit, n);    
     }
     
     int getNext() {
         double sigma = rand.nextGaussian();
         int result = 0;
         result = (int) (mean + sigma * Math.sqrt(variance)); 
-        
         return result;
     }
-
 }
