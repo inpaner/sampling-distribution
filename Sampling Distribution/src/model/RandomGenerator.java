@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 
 public class RandomGenerator extends AbstractGenerator {
-    private static final int SENSITIVITY = 1000;
+    private static final int SENSITIVITY = 10000000;
     public RandomGenerator(int lowerLimit, int upperLimit, int n) {
         super(lowerLimit, upperLimit, n);
     }
@@ -19,7 +19,7 @@ public class RandomGenerator extends AbstractGenerator {
     @Override
     protected void generateValues() {
         // randomize distribution
-        int seedCount = 0;
+        double seedCount = 0;
         List<Integer> distribution = new ArrayList<>();
         
         for (int i = lowerLimit; i <= upperLimit; i++) {
@@ -35,11 +35,12 @@ public class RandomGenerator extends AbstractGenerator {
          */
         values = new TreeMap<>();
         int mapIndex = 0;
-        int numbersCount = 0;
         for (int i = lowerLimit; i <= upperLimit; i++) {
-            int count = n * distribution.get(mapIndex) / seedCount;
-            values.put(i, count);
-            numbersCount += count;
+            double ratio = distribution.get(mapIndex) / seedCount;
+            System.out.println(ratio);
+            double count = n * ratio;
+            values.put(i, (int) count);
+            
             mapIndex++;
         }
 
