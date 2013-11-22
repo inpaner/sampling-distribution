@@ -16,7 +16,11 @@ public class SkewGenerator extends AbstractGenerator {
     @Override
     int getNext() {
         double stddev = Math.sqrt(variance);
-        double retval = Math.max(lowerLimit, Math.min(upperLimit, (int) mean + rand.nextGaussian() * stddev));
+        double retval = -1;
+        do {
+            retval = (int) mean + rand.nextGaussian() * stddev;
+        } while (retval < lowerLimit || retval > upperLimit);
+        
         return (int) retval;
     }
 

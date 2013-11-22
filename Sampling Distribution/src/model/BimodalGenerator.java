@@ -30,7 +30,11 @@ public class BimodalGenerator extends AbstractGenerator {
         }
         
         double stddev = Math.sqrt(varToUse);
-        double retval = Math.max(lowerLimit, Math.min(upperLimit, (int) meanToUse + rand.nextGaussian() * stddev));
+        double retval = -1;
+        do {
+            retval = (int) meanToUse + rand.nextGaussian() * stddev;
+        } while (retval < lowerLimit || retval > upperLimit);
+        
         return (int) retval;
     }
     
